@@ -45,34 +45,34 @@ public class OsuBeatmap {
     protected long maxCombo;
 
     public OsuBeatmap(Osu osu, JSONObject json) {
-        approved = ApprovalMode.getById(Integer.parseInt(json.getString("approved")));
-        approvedDate = Utility.parseDate(json.getString("approved_date"));
-        lastUpdate = Utility.parseDate(json.getString("last_update"));
+        approved = ApprovalMode.getById(Utility.getAsInt(json, "approved"));
+        approvedDate = Utility.getAsDate(json, "approved_date");
+        lastUpdate = Utility.getAsDate(json, "last_update");
         artist = json.getString("artist");
-        beatmapID = Integer.parseInt(json.getString("beatmap_id"));
-        beatmapSetID = Integer.parseInt(json.getString("beatmapset_id"));
-        bpm = Double.parseDouble(json.getString("bpm"));
+        beatmapID = Utility.getAsInt(json, "beatmap_id");
+        beatmapSetID = Utility.getAsInt(json, "beatmapset_id");
+        bpm = Utility.getAsDouble(json, "bpm");
         creatorName = json.getString("creator");
         creator = osu.users.getAsQuery(new EndpointUsers.ArgumentsBuilder(creatorName).build()).asLazilyLoaded();
-        difficultyRating = Double.parseDouble(json.getString("difficultyrating"));
-        diffSize = Double.parseDouble(json.getString("diff_size"));
-        diffOverall = Double.parseDouble(json.getString("diff_overall"));
-        diffApproach = Double.parseDouble(json.getString("diff_approach"));
-        diffDrain = Double.parseDouble(json.getString("diff_drain"));
-        hitLength = Double.parseDouble(json.getString("hit_length"));
+        difficultyRating = Utility.getAsDouble(json, "difficultyrating");
+        diffSize = Utility.getAsDouble(json, "diff_size");
+        diffOverall = Utility.getAsDouble(json, "diff_overall");
+        diffApproach = Utility.getAsDouble(json, "diff_approach");
+        diffDrain = Utility.getAsDouble(json, "diff_drain");
+        hitLength = Utility.getAsDouble(json, "hit_length");
         source = json.getString("source");
-        genreID = Genre.getById(Integer.parseInt(json.getString("genre_id")));
-        languageID = Language.getById(Integer.parseInt(json.getString("language_id")));
+        genreID = Genre.getById(Utility.getAsInt(json, "genre_id"));
+        languageID = Language.getById(Utility.getAsInt(json, "language_id"));
         title = json.getString("title");
-        totalLength = Double.parseDouble(json.getString("total_length"));
+        totalLength = Utility.getAsDouble(json, "total_length");
         version = json.getString("version");
         fileMd5 = json.getString("file_md5");
-        mode = OsuMode.getByID(Integer.parseInt(json.getString("mode")));
+        mode = OsuMode.getByID(Utility.getAsInt(json, "mode"));
         tags = json.getString("tags").split(" ");
-        favouriteCount = Long.parseLong(json.getString("favourite_count"));
-        playCount = Long.parseLong(json.getString("playcount"));
-        passCount = Long.parseLong(json.getString("passcount"));
-        maxCombo = Long.parseLong(json.getString("max_combo"));
+        favouriteCount = Utility.getAsLong(json, "favourite_count");
+        playCount = Utility.getAsLong(json, "playcount");
+        passCount = Utility.getAsLong(json, "passcount");
+        maxCombo = Utility.getAsLong(json, "max_combo");
     }
 
     public ApprovalMode getApprovalMode() {

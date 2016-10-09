@@ -7,6 +7,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 
+import org.json.JSONObject;
+
 public class Utility {
 
     // peppy's server offset I'd guess
@@ -34,6 +36,26 @@ public class Utility {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean getAsBoolean(JSONObject json, String attribute) {
+        return getAsInt(json, attribute) == 1;
+    }
+
+    public static int getAsInt(JSONObject json, String attribute) {
+        return Integer.parseInt(json.getString(attribute));
+    }
+
+    public static long getAsLong(JSONObject json, String attribute) {
+        return Long.parseLong(json.getString(attribute));
+    }
+
+    public static double getAsDouble(JSONObject json, String attribute) {
+        return Double.parseDouble(json.getString(attribute));
+    }
+
+    public static ZonedDateTime getAsDate(JSONObject json, String attribute) {
+        return parseDate(json.getString(attribute));
     }
 
 }
