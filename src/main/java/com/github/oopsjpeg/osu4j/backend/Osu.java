@@ -20,7 +20,6 @@ import org.json.JSONTokener;
 
 import com.github.oopsjpeg.osu4j.exception.MalformedRequestException;
 import com.github.oopsjpeg.osu4j.exception.OsuAPIException;
-import com.github.oopsjpeg.osu4j.exception.OsuRateLimitException;
 import com.github.oopsjpeg.osu4j.util.Utility;
 
 /**
@@ -128,7 +127,7 @@ public class Osu {
         }
     }
 
-    private void waitForFreeTicket() throws OsuRateLimitException {
+    private void waitForFreeTicket() {
         limiter.getOrWaitForTicket();
     }
 

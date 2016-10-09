@@ -1,7 +1,5 @@
 package com.github.oopsjpeg.osu4j.match;
 
-import java.io.IOException;
-
 import org.json.JSONObject;
 
 import com.github.oopsjpeg.osu4j.GameMods;
@@ -10,7 +8,6 @@ import com.github.oopsjpeg.osu4j.abstractbackend.LazilyLoaded;
 import com.github.oopsjpeg.osu4j.backend.EndpointBeatmaps;
 import com.github.oopsjpeg.osu4j.backend.Osu;
 import com.github.oopsjpeg.osu4j.beatmap.OsuBeatmap;
-import com.github.oopsjpeg.osu4j.exception.OsuRateLimitException;
 
 public class OsuMatchGame {
     private int gameID;
@@ -55,7 +52,7 @@ public class OsuMatchGame {
         return beatmapID;
     }
 
-    public LazilyLoaded<OsuBeatmap> getBeatmap() throws IOException, OsuRateLimitException {
+    public LazilyLoaded<OsuBeatmap> getBeatmap() {
         return beatmap;
     }
 

@@ -1,38 +1,30 @@
 package com.github.oopsjpeg.osu4j.backend;
 
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import com.github.oopsjpeg.osu4j.exception.OsuRateLimitException;
-
 public class RateLimiter {
-    private int freeTickets;
-    private final int rateLimit;
+    private static final long MILLIS_AS_NANOS = 1000 * 1000;
+    private static final long MINUTES_AS_NANOS = 60 * 1000 * MILLIS_AS_NANOS;
+
+    private final Object mutex = this;
+    private final long nanoSecondsPerRequest;
+    private long nextRequestPermit;
 
     public RateLimiter(int rateLimitPerMinute) {
-        freeTickets = rateLimitPerMinute;
-        rateLimit = rateLimitPerMinute;
-        ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1);
-        executor.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                freeTickets = rateLimitPerMinute;
+        nanoSecondsPerRequest = MINUTES_AS_NANOS / rateLimitPerMinute;
+    }
+
+    public void getOrWaitForTicket() {
+        synchronized (mutex) {
+            long now = System.nanoTime();
+            long waitTime = nextRequestPermit - now;
+            nextRequestPermit = now + nanoSecondsPerRequest;
+            if (waitTime < 0) {
+                return;
             }
-        }, 0, 1, TimeUnit.MINUTES);
-    }
-
-    private void checkOkay() throws OsuRateLimitException {
-        if (freeTickets == 0) {
-            throw new OsuRateLimitException(rateLimit);
-        }
-    }
-
-    public void getOrWaitForTicket() throws OsuRateLimitException {
-        // FIXME: actually don't throw, but wait until the request is okay
-        checkOkay();
-        synchronized (this) {
-            checkOkay();
-            freeTickets--;
+            try {
+                Thread.sleep(waitTime / MILLIS_AS_NANOS, (int) (waitTime % MILLIS_AS_NANOS));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
