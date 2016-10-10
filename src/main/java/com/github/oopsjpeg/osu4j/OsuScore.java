@@ -12,23 +12,23 @@ import com.github.oopsjpeg.osu4j.beatmap.OsuBeatmap;
 import com.github.oopsjpeg.osu4j.util.Utility;
 
 public class OsuScore {
-    private int beatmapID;
-    private LazilyLoaded<OsuBeatmap> beatmap;
-    private int score;
-    private int maxCombo;
-    private int count300;
-    private int count100;
-    private int count50;
-    private int countMiss;
-    private int countKatu;
-    private int countGeki;
-    private boolean perfect;
-    private GameMods enabledMods;
-    private int userID;
-    private LazilyLoaded<OsuUser> user;
-    private ZonedDateTime date;
-    private String rank;
-    public double pp;
+    private final int beatmapID;
+    private final LazilyLoaded<OsuBeatmap> beatmap;
+    private final int score;
+    private final int maxCombo;
+    private final int count300;
+    private final int count100;
+    private final int count50;
+    private final int countMiss;
+    private final int countKatu;
+    private final int countGeki;
+    private final boolean perfect;
+    private final GameMods enabledMods;
+    private final int userID;
+    private final LazilyLoaded<OsuUser> user;
+    private final ZonedDateTime date;
+    private final String rank;
+    private final double pp;
 
     public OsuScore(Osu osu, JSONObject json) {
         beatmapID = Integer.parseInt(json.getString("beatmap_id"));

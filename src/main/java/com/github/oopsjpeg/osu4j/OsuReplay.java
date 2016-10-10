@@ -6,8 +6,8 @@ import com.github.oopsjpeg.osu4j.backend.Osu;
 
 public class OsuReplay {
 
-    private String content;
-    private String encoding;
+    private final String content;
+    private final String encoding;
 
     public OsuReplay(Osu osu, JSONObject json) {
         content = json.getString("content");

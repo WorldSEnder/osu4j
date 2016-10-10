@@ -16,25 +16,25 @@ import com.github.oopsjpeg.osu4j.backend.EndpointUserRecents;
 import com.github.oopsjpeg.osu4j.backend.Osu;
 
 public class OsuUser {
-    private Osu osu;
-    private int userID;
-    private String username;
-    private long count300;
-    private long count100;
-    private long count50;
-    private long playCount;
-    private long rankedScore;
-    private long totalScore;
-    private double pp;
-    private long rank;
-    private double accuracy;
-    private long countRankSS;
-    private long countRankS;
-    private long countRankA;
-    private String country;
-    private long countryRank;
-    private OsuMode mode;
-    private List<OsuUserEvent> events = new ArrayList<>();
+    private final Osu osu;
+    private final int userID;
+    private final String username;
+    private final long count300;
+    private final long count100;
+    private final long count50;
+    private final long playCount;
+    private final long rankedScore;
+    private final long totalScore;
+    private final double pp;
+    private final long rank;
+    private final double accuracy;
+    private final long countRankSS;
+    private final long countRankS;
+    private final long countRankA;
+    private final String country;
+    private final long countryRank;
+    private final OsuMode mode;
+    private final List<OsuUserEvent> events = new ArrayList<>();
     private int topScoresSize = -1;
     private LazilyLoaded<List<OsuScore>> topScores;
     private int recentScoresSize = -1;
@@ -66,6 +66,9 @@ public class OsuUser {
     }
 
     public LazilyLoaded<List<OsuScore>> getTopScores(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("limit must not be negative");
+        }
         if (limit <= topScoresSize) {
             return topScores.map(list -> list.subList(0, limit));
         }
@@ -75,6 +78,9 @@ public class OsuUser {
     }
 
     public LazilyLoaded<List<OsuScore>> withRecentScores(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("limit must not be negative");
+        }
         if (limit <= recentScoresSize) {
             return recentScores.map(list -> list.subList(0, limit));
         }

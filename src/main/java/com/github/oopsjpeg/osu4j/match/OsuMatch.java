@@ -14,15 +14,13 @@ import com.github.oopsjpeg.osu4j.util.Utility;
 
 public class OsuMatch {
 
-    private Osu osu;
-    private int matchID;
-    private String name;
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime; // Not supported as of API v1.0, always null
-    private List<OsuMatchGame> games;
+    private final int matchID;
+    private final String name;
+    private final ZonedDateTime startTime;
+    private final ZonedDateTime endTime; // Not supported as of API v1.0, always null
+    private final List<OsuMatchGame> games;
 
     public OsuMatch(Osu osu, JSONObject json) {
-        this.osu = osu;
         JSONObject match = json.getJSONObject("match");
         matchID = Integer.parseInt(match.getString("match_id"));
         name = match.getString("name");
@@ -33,15 +31,6 @@ public class OsuMatch {
         for (int i = 0; i < gamesArr.length(); i++) {
             games.add(new OsuMatchGame(osu, gamesArr.getJSONObject(i)));
         }
-    }
-
-    public OsuMatch withGames() {
-        games.clear();
-        return this;
-    }
-
-    public Osu getParent() {
-        return osu;
     }
 
     public int getMatchID() {
