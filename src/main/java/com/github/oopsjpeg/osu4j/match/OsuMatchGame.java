@@ -1,5 +1,14 @@
 package com.github.oopsjpeg.osu4j.match;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.github.oopsjpeg.osu4j.GameMods;
@@ -20,7 +29,9 @@ public class OsuMatchGame {
     private ScoringType scoringType;
     private TeamType teamType;
     private GameMods mods;
-    // TODO: add scores
+    private List<OsuMatchScore> allScores;
+    private Map<Team, List<OsuMatchScore>> scoresByTeam;
+    private Map<Integer, OsuMatchScore> scoreBySlot;
 
     public OsuMatchGame(Osu osu, JSONObject json) {
         gameID = Integer.parseInt(json.getString("game_id"));
@@ -34,6 +45,27 @@ public class OsuMatchGame {
         scoringType = ScoringType.getById(Integer.parseInt(json.getString("scoring_type")));
         teamType = TeamType.getById(Integer.parseInt(json.getString("team_type")));
         mods = GameMods.parse(Integer.parseInt(json.getString("mods")));
+
+        List<OsuMatchScore> scores = new ArrayList<>();
+        JSONArray scoresJson = json.getJSONArray("scores");
+        for (Object scoreObj : scoresJson) {
+            scores.add(new OsuMatchScore(osu, (JSONObject) scoreObj));
+        }
+        allScores = Collections.unmodifiableList(scores);
+        Map<Team, List<OsuMatchScore>> scoresByTeam = new EnumMap<>(Team.class);
+        Map<Integer, OsuMatchScore> scoreBySlot = new HashMap<>();
+        for (OsuMatchScore score : allScores) {
+            scoresByTeam.computeIfAbsent(score.getTeam(), t -> new ArrayList<>()).add(score);
+            Integer slot = Integer.valueOf(score.getSlot());
+            if (scoreBySlot.containsKey(slot)) {
+                throw new IllegalArgumentException("Two scores set in the same slot: " + slot);
+            }
+            scoreBySlot.put(slot, score);
+        }
+        this.scoresByTeam = new HashMap<>();
+        scoresByTeam.forEach((team, scs) -> this.scoresByTeam.put(team, Collections.unmodifiableList(scs)));
+        this.scoresByTeam = Collections.unmodifiableMap(this.scoresByTeam);
+        this.scoreBySlot = Collections.unmodifiableMap(scoreBySlot);
     }
 
     public int getGameID() {
@@ -74,5 +106,25 @@ public class OsuMatchGame {
 
     public GameMods getMods() {
         return mods;
+    }
+
+    public List<OsuMatchScore> getAllScores() {
+        return allScores;
+    }
+
+    public List<OsuMatchScore> getScores(Team team) {
+        return scoresByTeam.getOrDefault(team, Collections.emptyList());
+    }
+
+    public Set<Team> getParticipatingTeams() {
+        return scoresByTeam.keySet();
+    }
+
+    public OsuMatchScore getScore(int slot) {
+        return scoreBySlot.get(Integer.valueOf(slot));
+    }
+
+    public Set<Integer> getUsedSlots() {
+        return scoreBySlot.keySet();
     }
 }
