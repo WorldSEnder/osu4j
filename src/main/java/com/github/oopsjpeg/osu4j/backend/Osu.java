@@ -93,7 +93,7 @@ public class Osu {
             J result = readStream(input, parser);
             return result;
         } catch (IOException ioe) {
-            throw new OsuAPIException(ioe);
+            throw new OsuAPIException(ioe.getMessage(), ioe);
         }
     }
 
