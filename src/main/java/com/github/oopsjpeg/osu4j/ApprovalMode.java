@@ -1,6 +1,7 @@
 package com.github.oopsjpeg.osu4j;
 
 public enum ApprovalMode {
+    LOVED(4),
     QUALIFIED(3),
     APPROVED(2),
     RANKED(1),
